@@ -8,14 +8,15 @@
 # 1. 统一配置区域 (格式: "开关|GPU编号|端口|模型名称|模型路径")
 # ------------------------------------------------------------------------------
 # MODELS=(
-#     "true  | 0       | 8900 | qwen2_audio      | ../models/Qwen2-Audio-7B-Instruct"
-#     "true  | 0,1     | 8902 | qwen3_omni       | ../models/Qwen3-Omni-30B-A3B-Instruct"
-#     "true  | 0       | 8901 | qwen2_5_omni     | ../models/Qwen2.5-Omni-7B"
-#     "true  | 2,3     | 8903 | voxtral_small    | ../models/Voxtral-Small-24B-2507"
-#     "true  | 1       | 8904 | voxtral_mini     | ../models/Voxtral-Mini-3B-2507"
-#     "true  | 1       | 8905 | phi4_multimodal  | ../models/Phi-4-multimodal-instruct"
-#     "true  | 2       | 8906 | midashenglm      | ../models/midashenglm-7b-1021-bf16"
-#     "true  | 3       | 8908 | qwen2_5_mcga     | ../models/qwen_omni_mcga"
+#     "true  | 0       | 8900 | qwen2_audio       | ../models/Qwen2-Audio-7B-Instruct"
+#     "true  | 0,1     | 8902 | qwen3_omni        | ../models/Qwen3-Omni-30B-A3B-Instruct"
+#     "true  | 0       | 8901 | qwen2_5_omni      | ../models/Qwen2.5-Omni-7B"
+#     "true  | 2,3     | 8903 | voxtral_small     | ../models/Voxtral-Small-24B-2507"
+#     "true  | 1       | 8904 | voxtral_mini      | ../models/Voxtral-Mini-3B-2507"
+#     "true  | 1       | 8905 | phi4_multimodal   | ../models/Phi-4-multimodal-instruct"
+#     "true  | 2       | 8906 | midashenglm       | ../models/midashenglm-7b-1021-bf16"
+#.    "true  | 0       | 8907 | step-audio-2-mini | ../models/Step-Audio-2-mini"
+#     "true  | 3       | 8908 | qwen2_5_mcga      | ../models/qwen_omni_mcga"
 # )
 
 MODELS=(
@@ -23,6 +24,18 @@ MODELS=(
     "true | 1       | 8904 | voxtral_mini     | ../models/Voxtral-Mini-3B-2507"
     "true | 2       | 8905 | phi4_multimodal  | ../models/Phi-4-multimodal-instruct"
     "true | 3       | 8906 | midashenglm      | ../models/midashenglm-7b-1021-bf16"
+)
+
+MODELS=(
+    "true | 0       | 8901 | qwen2_5_omni     | ../models/Qwen2.5-Omni-7B"
+    "true | 1       | 8904 | voxtral_mini     | ../models/Voxtral-Mini-3B-2507"
+    "true | 2       | 8905 | phi4_multimodal  | ../models/Phi-4-multimodal-instruct"
+    "true | 3       | 8906 | midashenglm      | ../models/midashenglm-7b-1021-bf16"
+)
+
+
+MODELS=(
+    "true  | 0       | 8907 | step-audio-2-mini | ../models/Step-Audio-2-mini"
 )
 
 # MODELS=(
