@@ -1,0 +1,14 @@
+vllm[audio]
+mistral_common[audio]==1.8.5
+jiwer
+pandas
+unbabel-comet
+transformers
+datasets
+tqdm
+torch
+torchvision
+requests
+torchaudio
+openai-whisper
+opencc

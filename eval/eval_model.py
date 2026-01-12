@@ -534,17 +534,18 @@ if __name__ == "__main__":
     MODELS_TO_TEST = ["gemini-3-flash-preview","qwen2_5_omni","midashenglm","gpt-4o-mini-audio-preview","qwen3_omni","voxtral_mini","phi4_multimodal","voxtral_small"]
     MODELS_TO_TEST = ["qwen2_5_omni"]
     mode = "audio"
-    mode = "text"
+    # mode = "text"
 
     DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 
     #s2tt,sec任务需要deepseek api key来进行评测
-    if DEEPSEEK_API_KEY.startswith("sk-yourkey"):
+    if len(DEEPSEEK_API_KEY) < 5:
         TASKS = ["asr","sqa","su","sr"]
+        print("DEEPSEEK_API_KEY 未正确配置，请检查环境变量。")
     else:
         TASKS = ["asr","s2tt","sec","sqa","su","sr"]
 
-    force_run=False
+    force_run=True
 
     for my_model in MODELS_TO_TEST:
 
