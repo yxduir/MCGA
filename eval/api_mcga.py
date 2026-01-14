@@ -13,12 +13,12 @@ from pydub import AudioSegment
 # --- 配置注册表 ---
 MODEL_CONFIGS_REGISTRY = {
     "qwen2_audio": {"ip": "localhost", "port": 8900},
-    "qwen3_omni": {"ip": "192.168.242.12", "port": 8901},
+    "qwen3_omni": {"ip": "localhost", "port": 8901},
     "qwen2_5_omni": {"ip": "localhost", "port": 8902},
-    "voxtral_small": {"ip": "192.168.242.12", "port": 8903},
+    "voxtral_small": {"ip": "localhost", "port": 8903},
     "voxtral_mini": {"ip": "localhost", "port": 8904},
     "phi4_multimodal": {"ip": "localhost", "port": 8905},
-    "midashenglm": {"ip": "192.168.242.12", "port": 8906},
+    "midashenglm": {"ip": "localhost", "port": 8906},
     "step-audio-2-mini": {"ip": "localhost", "port": 8907},
     "qwen2_5_mcga": {"ip": "localhost", "port": 8908},
     "gpt-4o-mini-audio": {"mode": "openai", "model": "gpt-4o-mini-audio-preview", "base_url": "https://api.openai.com/v1"}

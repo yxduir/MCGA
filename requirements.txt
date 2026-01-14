@@ -12,3 +12,4 @@ requests
 torchaudio
 openai-whisper
 opencc
+torchcodec

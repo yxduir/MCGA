@@ -8,5 +8,9 @@ data/ccfqa_test
 *.tar.gz
 *.jsonl
 upload
-vllm_logs/*.log
-eval/logs/
+eval/logs/*.log
+upload
+upload_test
+upload_val
+upload_train
+huggingface_upload/
