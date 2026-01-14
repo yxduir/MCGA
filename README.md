@@ -1,7 +1,14 @@
 # MCGA: A Multi-task Classical Chinese Literary Genre Audio Corpus
-CCFQA is a speech and text factuality evaluation benchmark that measures language models’ ability to answer short, fact-seeking questions and assess their cross-lingual and cross-modal consistency. It consists of speech and text in 8 languages, containing 1,800 n-way parallel sentences and a total of 14,400 speech samples.
+MCGA (Multi-task Classical Chinese Literary Genre Audio Corpus) is the first large-scale, open-source, and fully copyrighted audio corpus dedicated to Classical Chinese Studies, comprising 119 hours (22,000 samples) of standard Mandarin recordings by native speakers that span five major literary genres (Fu, Shi, Wen, Ci, and Qu) across 11 historical periods, specifically constructed to support six core speech-centric tasksAutomatic Speech Recognition (ASR), Speech-to-Text Translation (S2TT), Speech Emotion Captioning(SEC), Spoken Question Answering(SQA), Speech Understanding(SU), Speech Reasoning(SR) to bridge the gap in domain-specific audio resources and advance the multidimensional capabilities of Multimodal Large Language Models.
 - **Language**: Mandarin Chinese
-- **ISO-3 Code**: cmn, eng, fra, jpn, kor, rus, spa, yue 
+- **Data Size**: 22,000 sample, 119hour
+- **Data Split**: Train / Val / Test
+- **Data Source**: Native speakers (13 males and 15 females)
+- **Domain**: Classical Chinese Literary Study
+- **Literary Genre**: Fu (Rhapsody), Shi (Poetry), Wen (Prose), Ci (Lyric), and Qu (Song)
+- **Task**: ASR, S2TT, SEC, SQA, SU, SR
+- **License**: CC BY-NC-SA-4.0
+
 
 📄Paper：[https://arxiv.org/abs/2508.07295](https://arxiv.org/abs/2508.07295)
 
@@ -18,64 +25,44 @@ print(MCGA)
 git clone https://github.com/yxduir/MCGA
 cd MCGA
 
-#我们推荐使用uv安装环境
+#We recommend using uv to set up the environment.
 uv venv --python 3.10
 source ./venv/bin/activate
-
-sudo apt update
-sudo apt install ffmpeg
-sudo apt install git-lfs
-
-pip install -r requirements.txt
+uv pip install -r requirements.txt
 ```
 
 ## Download Model 
 ```
-cd models/
-# Access to the Gemma models is required before using git lfs.
-git lfs clone https://huggingface.co/google/gemma-3-27b-it
-git lfs clone https://huggingface.co/Qwen/Qwen2-Audio-7B-Instruct
+cd models
+hf download Qwen/Qwen2.5-Omni-7B --local-dir Qwen2.5-Omni-7B
 cd ..
 ```
 
-## Download Demo Data
+## Download Test Split Data
 ```
-cd data
-git lfs clone https://huggingface.co/datasets/yxdu/ccfqa_test
-cd ..
-tar -zxvf data/ccfqa_test/data.tar.gz data
+hf download yxdu/MCGA MCGA_test.tar.gz --repo-type dataset --local-dir ./
+tar -zxvf MCGA_test.tar.gz 
 ```
 
 
-## VLLM Inference Demo
+## VLLM Inference Server
 
 ```
 cd eval
-bash run_qwen2audio.sh
+bash vllm_server.sh
 cd ..
 ```
 
 ## Eval
 
 ```
-cd output
-python vllm_eval.py
+cd eval
+bash infer_model.sh
 ```
 
 
-## License
 
-All datasets are licensed under the [Creative Commons Attribution-NonCommercial license (CC-BY-NC)](https://creativecommons.org/licenses/), which allows use, sharing, and adaptation for **non-commercial** purposes only, with proper attribution.
 
 # 🖊Citation
 ```
-@misc{du2025ccfqabenchmarkcrosslingualcrossmodal,
-      title={CCFQA: A Benchmark for Cross-Lingual and Cross-Modal Speech and Text Factuality Evaluation}, 
-      author={Yexing Du and Kaiyuan Liu and Youcheng Pan and Zheng Chu and Bo Yang and Xiaocheng Feng and Yang Xiang and Ming Liu},
-      year={2025},
-      eprint={2508.07295},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2508.07295}, 
-}
 ```
