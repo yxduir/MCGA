@@ -512,7 +512,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="模型评测脚本")
     
     # 定义命令行参数
-    parser.add_argument("--model", nargs="+", default=["Qwen2.5-Omni-7B"], help="要测试的模型列表")
+    parser.add_argument("--model", type=str, default="Qwen2.5-Omni-7B", help="要测试的模型列表")
     parser.add_argument("--mode", type=str, default="audio", choices=["audio", "text"], help="模式：audio 或 text")
     parser.add_argument("--tasks", nargs="+", default=["asr", "s2tt", "sec", "sqa", "su", "sr"] ,help="执行的任务列表 (例如: asr s2tt sec sqa su sr)")
     parser.add_argument("--force_run", action="store_true",default=False,help="是否强制重跑")
@@ -535,9 +535,10 @@ if __name__ == "__main__":
         else:
             TASKS = ["asr", "s2tt", "sec", "sqa", "su", "sr"]
 
-    my_model = f"{MODELS_TO_TEST}_{mode}"
+    eval_model = f"{MODELS_TO_TEST}_{mode}"
+    print(eval_model)
 
-    evaluator = ModelEvaluator(MODELS_TO_TEST, api_key=DEEPSEEK_API_KEY)
+    evaluator = ModelEvaluator(eval_model, api_key=DEEPSEEK_API_KEY)
 
     if "asr" in TASKS: evaluator.run_asr_eval('asr', 'asr', 'asr_r', ["train", "val", "test"], do_genre_analysis=True, do_dynasty_analysis=False)
     if "s2tt" in TASKS:evaluator.run_s2tt_beauty_eval(folder='s2tt', src_key='asr', trans_key='s2tt_r', num_workers=64, force_run=force_run)

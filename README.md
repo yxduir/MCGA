@@ -43,7 +43,7 @@ bash vllm_infer.sh \
 
 | Pos | Name | Description | Example |
 | :--- | :--- | :--- | :--- |
-| `$1` | `Model` | VLLM-supported model or Api:<br>• `Qwen/Qwen2.5-Omni-7B`, `Qwen/Qwen3-Omni-30B-A3B-Instruct`<br>• `mistralai/Voxtral-Small-24B-2507`, `mistralai/Voxtral-Mini-3B-2507`<br>• `microsoft/Phi-4-multimodal-instruct`<br>• `GPT-4o-mini-Audio`（for Api） | `"Qwen/Qwen2.5-Omni-7B"` |
+| `$1` | `Model` | VLLM-supported model or Api:<br>• `Qwen/Qwen3-Omni-30B-A3B-Instruct`, `Qwen/Qwen2.5-Omni-7B`<br>• `mistralai/Voxtral-Small-24B-2507`, `mistralai/Voxtral-Mini-3B-2507`<br>• `microsoft/Phi-4-multimodal-instruct`<br>• `GPT-4o-mini-Audio`（for Api） | `"Qwen/Qwen2.5-Omni-7B"` |
 | `$2` | `GPUs` | Target GPU ID(s) (e.g., `"0"` or `"0,1"`) | `"0"` |
 | `$3` | `Port` | Port for the vLLM server | `8901` |
 | `$4` | `Tasks` | Evaluation tasks (comma-separated) | `"asr,s2tt,sec,sqa,su,sr"` |
@@ -54,7 +54,7 @@ bash vllm_infer.sh \
 
 ## Eval Model
 ```
-export DEEPSEEK_API_KEY="deepseek-api-for-s2tt-sec-tasks-optional"
+export DEEPSEEK_API_KEY="deepseek-api-for-s2tt-sec-task-optional"
 cd eval
 python eval_model.py \
     --model "Qwen/Qwen2.5-Omni-7B" \
