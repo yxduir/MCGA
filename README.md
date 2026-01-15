@@ -19,7 +19,9 @@ MCGA (Multi-task Classical Chinese Literary Genre Audio Corpus) is the first lar
 git clone https://github.com/yxduir/MCGA
 cd MCGA
 
-#We recommend using uv to set up the environment.
+# Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
 uv venv --python 3.10
 source ./venv/bin/activate
 uv pip install -r requirements.txt
