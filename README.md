@@ -7,19 +7,14 @@ MCGA (Multi-task Classical Chinese Literary Genre Audio Corpus) is the first lar
 - **Domain**: Classical Chinese Literary Study
 - **Literary Genre**: Fu (Rhapsody), Shi (Poetry), Wen (Prose), Ci (Lyric), and Qu (Song)
 - **Task**: ASR, S2TT, SEC, SQA, SU, SR
+- **Huggingface**: 🤗 <a href="https://huggingface.co/datasets/yxdu/MCGA" target="_blank">Hugging Face</a>
+- **Paper**: 📄 <a href="https://arxiv.org/abs/2601.09270" target="_blank">Paper</a>
 - **License**: CC BY-NC-SA-4.0
+
 
 > **Note:** The **Test split** is released first for fair benchmarking.
 > The full dataset will be available soon.
 
-📄Paper：[https://arxiv.org/abs/2601.09270](https://arxiv.org/abs/2601.09270)
-
-## How to use
-```python
-from datasets import load_dataset
-MCGA = load_dataset("yxdu/MCGA")
-print(MCGA)
-```
 
 
 ## Installation
@@ -35,11 +30,6 @@ uv pip install -r requirements.txt
 
 ## Download Model、Data、Inference
 ```
-# 可添加支持VLLM框架的模型，例如：
-# Qwen/Qwen2.5-Omni-7B  Qwen/Qwen3-Omni-30B-A3B-Instruct Qwen/Qwen2-Audio-7B-Instruct 
-# mistralai/Voxtral-Small-24B-2507 mistralai/Voxtral-Mini-3B-2507 
-# microsoft/Phi-4-multimodal-instruct
-
 bash vllm_infer.sh \
     "mistralai/Voxtral-Mini-3B-2507" \
     "0" \
