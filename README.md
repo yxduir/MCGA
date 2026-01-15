@@ -41,14 +41,24 @@ uv pip install -r requirements.txt
 # microsoft/Phi-4-multimodal-instruct
 
 bash vllm_infer.sh \
-    "Qwen/Qwen2.5-Omni-7B" \             #模型地址
-    "0" \                                #GPU编号 0,1 | 0
-    8901 \                               #VLLM端口号
-    "asr,s2tt,sec,sqa,su,sr" \           #任务列表,适用audio和text
-    "audio" \                            #audio ｜ text 
-    16 \                                 #多进程并发api请求
-    "sk-your-openai-key-here"            #可不填，用于评估GPT-4o-mini-Audio
+    "mistralai/Voxtral-Mini-3B-2507" \
+    "0" \
+    8901 \
+    "asr,s2tt,sec,sqa,su,sr" \
+    "audio" \
+    16 \
+    "sk-your-openai-key-here"
 ```
+
+| 参数位置 | 参数名称 | 说明 | 示例值 |
+| :--- | :--- | :--- | :--- |
+| **`$1`** | **Model HF** | 可添加支持VLLM框架的模型，例如：：<br>`Qwen/Qwen2.5-Omni-7B`, `Qwen/Qwen3-Omni-30B-A3B-Instruct`, `Qwen/Qwen2-Audio-7B-Instruct`<br>`mistralai/Voxtral-Small-24B-2507`, `mistralai/Voxtral-Mini-3B-2507`<br>`microsoft/Phi-4-multimodal-instruct` | `"Qwen/Qwen2.5-Omni-7B"` |
+| **`$2`** | **GPUs** | 指定运行的 GPU 编号 (支持多卡，如 `"0,1"`) | `"0"` |
+| **`$3`** | **Port** | vLLM 服务监听的端口号 | `8901` |
+| **`$4`** | **Tasks** | 评测任务列表，多个任务用逗号分隔 | `"asr,s2tt,sec,sqa,su,sr"` |
+| **`$5`** | **Mode** | 输入模态选择：`audio` (音频推理) 或 `text` (纯文本) | `"audio"` |
+| **`$6`** | **Workers** | 并行发送 API 请求的进程数，建议根据 CPU 核数设置 | `16` |
+| **`$7`** | **API Key** | 可选。仅在调用 OpenAI 模型（如 GPT-4o-Audio）时需要 | `"sk-xxxx"` |
 
 
 <!-- ## Eval
@@ -61,7 +71,7 @@ bash infer_model.sh
 
 
 
-# 🖊Citation
+## 🖊Citation
 ```
 @misc{du2026mcgamultitaskclassicalchinese,
       title={{MCGA}: A Multi-task Classical Chinese Literary Genre Audio Corpus}, 

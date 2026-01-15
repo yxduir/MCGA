@@ -14,10 +14,11 @@ upload_test
 upload_val
 upload_train
 huggingface_upload/
-eval/asr
-eval/s2tt
-eval/sec
-eval/sqa
-eval/su
-eval/sr
+eval/asr/*.jsonl
+eval/s2tt/*.jsonl
+eval/sec/*.jsonl
+eval/sqa/*.jsonl
+eval/su/*.jsonl
+eval/sr/*.jsonl
 eval/*.log
+*.py
