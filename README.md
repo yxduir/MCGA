@@ -59,7 +59,6 @@ cd eval
 python eval_model.py \
     --model "Qwen/Qwen2.5-Omni-7B" \
     --mode "audio"
-
 ```
 
 
