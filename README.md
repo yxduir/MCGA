@@ -41,13 +41,13 @@ uv pip install -r requirements.txt
 # microsoft/Phi-4-multimodal-instruct
 
 bash vllm_infer.sh \
-    "Qwen/Qwen2.5-Omni-7B" \  #huggingface url
-    "0" \   #GPU编号 0,1 | 0
-    8901 \  #VLLM端口号
-    "asr,s2tt,sec,sqa,su,sr" \  #语音任务列表
-    "audio" \  #audio ｜ text 
-    16 \  #多进程并发api请求
-    "sk-your-openai-key-here"  #Openai Key可不填，用于评估GPT-4o-mini-Audio
+    "Qwen/Qwen2.5-Omni-7B" \             #模型地址
+    "0" \                                #GPU编号 0,1 | 0
+    8901 \                               #VLLM端口号
+    "asr,s2tt,sec,sqa,su,sr" \           #任务列表,适用audio和text
+    "audio" \                            #audio ｜ text 
+    16 \                                 #多进程并发api请求
+    "sk-your-openai-key-here"            #可不填，用于评估GPT-4o-mini-Audio
 ```
 
 

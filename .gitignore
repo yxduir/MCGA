@@ -14,3 +14,10 @@ upload_test
 upload_val
 upload_train
 huggingface_upload/
+eval/asr
+eval/s2tt
+eval/sec
+eval/sqa
+eval/su
+eval/sr
+eval/*.log
