@@ -31,7 +31,7 @@ uv pip install -r requirements.txt
 ## Download Model、Data、Inference
 ```
 bash vllm_infer.sh \
-    "mistralai/Voxtral-Mini-3B-2507" \
+    "Qwen/Qwen2.5-Omni-7B" \
     "0" \
     8901 \
     "asr,s2tt,sec,sqa,su,sr" \
