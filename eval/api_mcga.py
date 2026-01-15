@@ -21,7 +21,11 @@ MODEL_CONFIGS_REGISTRY = {
     "midashenglm-7b-1021-bf16": {"ip": "localhost", "port": 8906},
     "Step-Audio-2-mini": {"ip": "localhost", "port": 8907},
     "qwen_omni_mcga": {"ip": "localhost", "port": 8908},
-    "GPT-4o-mini-Audio": {"mode": "openai", "model": "gpt-4o-mini-audio-preview", "base_url": "https://api.openai.com/v1"}
+    "GPT-4o-mini-Audio": {
+        "mode": "openai", 
+        "model": "gpt-4o-mini-audio-preview", 
+        "base_url": "https://api.openai.com/v1"
+    }
 }
 
 class SafeDict(dict):
@@ -70,12 +74,14 @@ def process_line(args):
                     "messages": [{"role": "system", "content": system_p}, {"role": "user", "content": content}],
                     "temperature": 0, "max_tokens": 2048,
                 }
-                resp = requests.post(opt['url'], json=payload, headers=opt['headers'], timeout=120)
+                # 使用拼接好的完整 URL (包含 /chat/completions)
+                resp = requests.post(opt['full_url'], json=payload, headers=opt['headers'], timeout=120)
                 answer = resp.json()['choices'][0]['message']['content']
 
             # --- OpenAI 模式 ---
             else:
-                client = OpenAI(api_key=opt['api_key'], base_url=opt['url'])
+                # SDK 只需要 base_url
+                client = OpenAI(api_key=opt['api_key'], base_url=opt['base_url'])
                 if input_mode == "audio":
                     audio_b64 = encode_audio(os.path.join(base_dir, data_entry.get(audio_key)))
                     user_content = [
@@ -88,15 +94,18 @@ def process_line(args):
                 res = client.chat.completions.create(
                     model=opt['model_name'],
                     messages=[{"role": "system", "content": system_p}, {"role": "user", "content": user_content}],
-                    temperature=0
+                    temperature=0, max_tokens=2048, timeout=120
                 )
                 answer = res.choices[0].message.content
 
             data_entry[out_key] = answer.strip()
+            
+            # --- 保持原有的打印功能 ---
             if len(data_entry[out_key]) % 10 == 0:
                 print(data_entry[out_key], flush=True)
-            if len(data_entry[out_key]) <2:
+            if len(data_entry[out_key]) < 5:
                 print(data_entry[out_key], flush=True)
+                
             return {"error": None, "data": data_entry}
         except Exception as e:
             if attempt == 2: return {"error": str(e), "data": data_entry}
@@ -111,19 +120,36 @@ def run_task(task_name, args):
     output_path = f"../eval/{task_name}/{args.model}_{args.input_mode}.jsonl"
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
-    # 准备请求参数
     config = MODEL_CONFIGS_REGISTRY.get(args.model)
+    mode = config.get("mode", "local")
     
-    # 动态获取端口：优先使用命令行参数，否则使用注册表默认值
-    target_port = args.port if args.port is not None else config.get("port")
-    
+    # --- 修正后的 URL 处理逻辑 ---
+    # 优先级：命令行参数 > 注册表预置 > 默认值
+    if mode == "openai":
+        final_base_url = args.base_url if args.base_url != "https://api.openai.com/v1" else config.get("base_url", "https://api.openai.com/v1")
+    else:
+        # Local 模式
+        target_port = args.port if args.port is not None else config.get("port")
+        # 如果命令行手动传了 base_url，则优先使用
+        if args.base_url and args.base_url != "https://api.openai.com/v1":
+            final_base_url = args.base_url
+        else:
+            final_base_url = f"http://{config['ip']}:{target_port}/v1"
+
     opt = {
-        "mode": config.get("mode", "local"),
+        "mode": mode,
         "model_name": config.get("model", args.model),
         "input_mode": args.input_mode,
-        "api_key": args.api_key if config.get("mode") == "openai" else "EMPTY",
-        "url": config.get("base_url") if config.get("mode") == "openai" else f"http://{config['ip']}:{target_port}/v1/chat/completions",
+        "api_key": args.api_key if mode == "openai" else "EMPTY",
+        "base_url": final_base_url, 
     }
+    
+    # 针对 requests 需要完整路径，SDK 只需要 base_url
+    if mode == "local":
+        opt["full_url"] = f"{opt['base_url'].rstrip('/')}/chat/completions"
+    else:
+        opt["full_url"] = opt["base_url"]
+
     opt["headers"] = {"Authorization": f"Bearer {opt['api_key']}"}
 
     tasks = []
@@ -133,7 +159,7 @@ def run_task(task_name, args):
             if item.get("split") == "test" or item.get("split") == "all":
                 tasks.append((item, os.path.dirname(os.path.abspath(input_path)), prompts["system"], prompts["instruction"], "audio", output_key, opt))
 
-    print(f"[*] Task: {task_name} | Model: {args.model} | Port: {target_port} | Mode: {args.input_mode} | Total: {len(tasks)}")
+    print(f"[*] Task: {task_name} | Model: {args.model} | URL: {opt['base_url']} | Mode: {args.input_mode} | Total: {len(tasks)}")
     
     with open(output_path, 'w', encoding='utf-8') as f_out:
         with Pool(processes=args.workers) as pool:
@@ -151,6 +177,7 @@ if __name__ == "__main__":
     parser.add_argument("--workers", type=int, default=16)
     parser.add_argument("--api_key", type=str, default="sk-your-key")
     parser.add_argument("--port", type=int, default=None, help="Manual override for the port defined in REGISTRY")
+    parser.add_argument("--base_url", type=str, default="https://api.openai.com/v1", help="Manual override for the API base URL")
     
     args = parser.parse_args()
 
