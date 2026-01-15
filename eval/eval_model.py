@@ -541,8 +541,8 @@ if __name__ == "__main__":
     evaluator = ModelEvaluator(eval_model, api_key=DEEPSEEK_API_KEY)
 
     if "asr" in TASKS: evaluator.run_asr_eval('asr', 'asr', 'asr_r', ["train", "val", "test"], do_genre_analysis=True, do_dynasty_analysis=False)
-    if "s2tt" in TASKS:evaluator.run_s2tt_beauty_eval(folder='s2tt', src_key='asr', trans_key='s2tt_r', num_workers=64, force_run=force_run)
-    if "sec" in TASKS: evaluator.run_sec_eval('sec', num_processes=64, force_run=force_run)
+    if "s2tt" in TASKS:evaluator.run_s2tt_beauty_eval(folder='s2tt', src_key='asr', trans_key='s2tt_r', num_workers=256, force_run=force_run)
+    if "sec" in TASKS: evaluator.run_sec_eval('sec', num_processes=256, force_run=force_run)
     if "sqa" in TASKS: evaluator.run_sqa_eval('sqa', 'sqa_a', 'sqa_a_r', ["test"])
     if "su" in TASKS: evaluator.run_acc_eval('su', 'su_a', 'su_r', ["test"])
     if "sr" in TASKS: evaluator.run_acc_eval('sr', 'sr_a', 'sr_r', ["test"])
