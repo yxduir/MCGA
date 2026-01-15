@@ -40,15 +40,15 @@ bash vllm_infer.sh \
     "sk-your-openai-key-here"
 ```
 
-| 参数位置 | 参数名称 | 说明 | 示例值 |
+| Pos | Name | Description | Example |
 | :--- | :--- | :--- | :--- |
-| **`$1`** | **Model HF** | 可添加支持VLLM框架的模型，例如：：<br>`Qwen/Qwen2.5-Omni-7B`, `Qwen/Qwen3-Omni-30B-A3B-Instruct`, `Qwen/Qwen2-Audio-7B-Instruct`<br>`mistralai/Voxtral-Small-24B-2507`, `mistralai/Voxtral-Mini-3B-2507`<br>`microsoft/Phi-4-multimodal-instruct` | `"Qwen/Qwen2.5-Omni-7B"` |
-| **`$2`** | **GPUs** | 指定运行的 GPU 编号 (支持多卡，如 `"0,1"`) | `"0"` |
-| **`$3`** | **Port** | vLLM 服务监听的端口号 | `8901` |
-| **`$4`** | **Tasks** | 评测任务列表，多个任务用逗号分隔 | `"asr,s2tt,sec,sqa,su,sr"` |
-| **`$5`** | **Mode** | 输入模态选择：`audio` (音频推理) 或 `text` (纯文本) | `"audio"` |
-| **`$6`** | **Workers** | 并行发送 API 请求的进程数，建议根据 CPU 核数设置 | `16` |
-| **`$7`** | **API Key** | 可选。仅在调用 OpenAI 模型（如 GPT-4o-Audio）时需要 | `"sk-xxxx"` |
+| **`$1`** | **Model** | VLLM-supported model repo or path:<br>• `Qwen/Qwen2.5-Omni-7B`, `Qwen/Qwen3-Omni-30B-A3B-Instruct`, `Qwen/Qwen2-Audio-7B-Instruct`<br>• `mistralai/Voxtral-Small-24B-2507`, `mistralai/Voxtral-Mini-3B-2507`<br>• `microsoft/Phi-4-multimodal-instruct` | `"Qwen/Qwen2.5-Omni-7B"` |
+| **`$2`** | **GPUs** | Target GPU ID(s) (e.g., `"0"` or `"0,1"`) | `"0"` |
+| **`$3`** | **Port** | Port for the vLLM server | `8901` |
+| **`$4`** | **Tasks** | Evaluation tasks (comma-separated) | `"asr,s2tt,sec,sqa,su,sr"` |
+| **`$5`** | **Mode** | Input modality: `audio` or `text` | `"audio"` |
+| **`$6`** | **Workers** | Number of parallel API request threads | `16` |
+| **`$7`** | **API-Key** | Optional. Required only for OpenAI models | `"sk-xxxx"` |
 
 
 <!-- ## Eval
