@@ -41,17 +41,6 @@ bash vllm_infer.sh \
     "https://api.openai.com/v1" 
 ```
 
-
-## Download Model、Data、Inference
-```
-export DEEPSEEK_API_KEY="deepseek-api-for-s2tt-sec-tasks-optional"
-cd eval
-python eval_model.py \
-    --model "Qwen/Qwen2.5-Omni-7B" \
-    --mode "audio"
-
-```
-
 | Pos | Name | Description | Example |
 | :--- | :--- | :--- | :--- |
 | **`$1`** | **Model** | VLLM-supported model repo or Api:<br>• `Qwen/Qwen2.5-Omni-7B`, `Qwen/Qwen3-Omni-30B-A3B-Instruct`, `Qwen/Qwen2-Audio-7B-Instruct`<br>• `mistralai/Voxtral-Small-24B-2507`, `mistralai/Voxtral-Mini-3B-2507`<br>• `microsoft/Phi-4-multimodal-instruct`<br>• `GPT-4o-mini-Audio`（for Api） | `"Qwen/Qwen2.5-Omni-7B"` |
@@ -62,6 +51,18 @@ python eval_model.py \
 | **`$6`** | **Workers** | Number of parallel API request threads | `8` |
 | **`$7`** | **API-Key** | Optional. Required only for `GPT-4o-mini-Audio` | `"sk-xxxx"` |
 | **`$8`** | **API-URL** | Optional. Required only for `GPT-4o-mini-Audio` | `"https://api.openai.com/v1"` |
+
+## Eval Model
+```
+export DEEPSEEK_API_KEY="deepseek-api-for-s2tt-sec-tasks-optional"
+cd eval
+python eval_model.py \
+    --model "Qwen/Qwen2.5-Omni-7B" \
+    --mode "audio"
+
+```
+
+
 
 
 <!-- ## Eval
