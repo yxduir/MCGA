@@ -9,8 +9,10 @@ MCGA (Multi-task Classical Chinese Literary Genre Audio Corpus) is the first lar
 - **Task**: ASR, S2TT, SEC, SQA, SU, SR
 - **License**: CC BY-NC-SA-4.0
 
+> **Note:** The **Test split** is released first for fair benchmarking.
+> The full dataset will be available soon.
 
-📄Paper：[https://arxiv.org/abs/2508.07295](https://arxiv.org/abs/2508.07295)
+📄Paper：[https://arxiv.org/abs/2601.09270](https://arxiv.org/abs/2601.09270)
 
 ## How to use
 ```python
@@ -31,38 +33,43 @@ source ./venv/bin/activate
 uv pip install -r requirements.txt
 ```
 
-## Download Model 
+## Download Model、Data、Inference
 ```
-cd models
-hf download Qwen/Qwen2.5-Omni-7B --local-dir Qwen2.5-Omni-7B
-cd ..
+# 可添加支持VLLM框架的模型，例如：
+# Qwen/Qwen2.5-Omni-7B  Qwen/Qwen3-Omni-30B-A3B-Instruct Qwen/Qwen2-Audio-7B-Instruct 
+# mistralai/Voxtral-Small-24B-2507 mistralai/Voxtral-Mini-3B-2507 
+# microsoft/Phi-4-multimodal-instruct
+
+bash vllm_infer.sh \
+    "Qwen/Qwen2.5-Omni-7B" \  #huggingface url
+    "0" \   #GPU编号 0,1 | 0
+    8901 \  #VLLM端口号
+    "asr,s2tt,sec,sqa,su,sr" \  #语音任务列表
+    "audio" \  #audio ｜ text 
+    16 \  #多进程并发api请求
+    "sk-your-openai-key-here"  #Openai Key可不填，用于评估GPT-4o-mini-Audio
 ```
 
-## Download Test Split Data
-```
-hf download yxdu/MCGA MCGA_test.tar.gz --repo-type dataset --local-dir ./
-tar -zxvf MCGA_test.tar.gz 
-```
 
-
-## VLLM Inference Server
-
-```
-cd eval
-bash vllm_server.sh
-cd ..
-```
-
-## Eval
+<!-- ## Eval
 
 ```
 cd eval
 bash infer_model.sh
-```
+``` -->
 
 
 
 
 # 🖊Citation
 ```
+@misc{du2026mcgamultitaskclassicalchinese,
+      title={{MCGA}: A Multi-task Classical Chinese Literary Genre Audio Corpus}, 
+      author={Yexing Du and Kaiyuan Liu and Bihe Zhang and Youcheng Pan and Bo Yang and Liangyu Huo and Xiyuan Zhang and Jian Xie and Daojing He and Yang Xiang and Ming Liu and Bin Qin},
+      year={2026},
+      eprint={2601.09270},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2601.09270}, 
+}
 ```

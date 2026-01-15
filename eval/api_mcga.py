@@ -12,16 +12,16 @@ from pydub import AudioSegment
 
 # --- 配置注册表 ---
 MODEL_CONFIGS_REGISTRY = {
-    "qwen2_audio": {"ip": "localhost", "port": 8900},
-    "qwen3_omni": {"ip": "localhost", "port": 8901},
-    "qwen2_5_omni": {"ip": "localhost", "port": 8902},
-    "voxtral_small": {"ip": "localhost", "port": 8903},
-    "voxtral_mini": {"ip": "localhost", "port": 8904},
-    "phi4_multimodal": {"ip": "localhost", "port": 8905},
-    "midashenglm": {"ip": "localhost", "port": 8906},
-    "step-audio-2-mini": {"ip": "localhost", "port": 8907},
-    "qwen2_5_mcga": {"ip": "localhost", "port": 8908},
-    "gpt-4o-mini-audio": {"mode": "openai", "model": "gpt-4o-mini-audio-preview", "base_url": "https://api.openai.com/v1"}
+    "Qwen2-Audio-7B-Instruct": {"ip": "localhost", "port": 8900},
+    "Qwen2.5-Omni-7B": {"ip": "localhost", "port": 8901},
+    "Qwen3-Omni-30B-A3B-Instruct": {"ip": "localhost", "port": 8902},
+    "Voxtral-Small-24B-2507": {"ip": "localhost", "port": 8903},
+    "Voxtral-Mini-3B-2507": {"ip": "localhost", "port": 8904},
+    "Phi-4-multimodal-instruct": {"ip": "localhost", "port": 8905},
+    "midashenglm-7b-1021-bf16": {"ip": "localhost", "port": 8906},
+    "Step-Audio-2-mini": {"ip": "localhost", "port": 8907},
+    "qwen_omni_mcga": {"ip": "localhost", "port": 8908},
+    "GPT-4o-mini-Audio": {"mode": "openai", "model": "gpt-4o-mini-audio-preview", "base_url": "https://api.openai.com/v1"}
 }
 
 class SafeDict(dict):
@@ -93,7 +93,9 @@ def process_line(args):
                 answer = res.choices[0].message.content
 
             data_entry[out_key] = answer.strip()
-            if len(data_entry[out_key]) % 20 == 0:
+            if len(data_entry[out_key]) % 10 == 0:
+                print(data_entry[out_key], flush=True)
+            if len(data_entry[out_key]) <2:
                 print(data_entry[out_key], flush=True)
             return {"error": None, "data": data_entry}
         except Exception as e:
@@ -104,19 +106,23 @@ def run_task(task_name, args):
     prompts = load_prompts().get(task_name)
     if not prompts: return
 
-    input_path = f"../MCGA_{task_name}.jsonl"
+    input_path = f"../data/MCGA_{task_name}_test.jsonl"
     output_key = f"{task_name}_a_r" if task_name == "sqa" else f"{task_name}_r"
     output_path = f"../eval/{task_name}/{args.model}_{args.input_mode}.jsonl"
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
     # 准备请求参数
     config = MODEL_CONFIGS_REGISTRY.get(args.model)
+    
+    # 动态获取端口：优先使用命令行参数，否则使用注册表默认值
+    target_port = args.port if args.port is not None else config.get("port")
+    
     opt = {
         "mode": config.get("mode", "local"),
         "model_name": config.get("model", args.model),
         "input_mode": args.input_mode,
         "api_key": args.api_key if config.get("mode") == "openai" else "EMPTY",
-        "url": config.get("base_url") if config.get("mode") == "openai" else f"http://{config['ip']}:{config['port']}/v1/chat/completions",
+        "url": config.get("base_url") if config.get("mode") == "openai" else f"http://{config['ip']}:{target_port}/v1/chat/completions",
     }
     opt["headers"] = {"Authorization": f"Bearer {opt['api_key']}"}
 
@@ -127,7 +133,7 @@ def run_task(task_name, args):
             if item.get("split") == "test" or item.get("split") == "all":
                 tasks.append((item, os.path.dirname(os.path.abspath(input_path)), prompts["system"], prompts["instruction"], "audio", output_key, opt))
 
-    print(f"[*] Task: {task_name} | Model: {args.model} | Mode: {args.input_mode} | Total: {len(tasks)}")
+    print(f"[*] Task: {task_name} | Model: {args.model} | Port: {target_port} | Mode: {args.input_mode} | Total: {len(tasks)}")
     
     with open(output_path, 'w', encoding='utf-8') as f_out:
         with Pool(processes=args.workers) as pool:
@@ -144,6 +150,8 @@ if __name__ == "__main__":
     parser.add_argument("--input_mode", type=str, choices=["audio", "text"], default="audio")
     parser.add_argument("--workers", type=int, default=16)
     parser.add_argument("--api_key", type=str, default="sk-your-key")
+    parser.add_argument("--port", type=int, default=None, help="Manual override for the port defined in REGISTRY")
+    
     args = parser.parse_args()
 
     for task in args.tasks.split(","):
