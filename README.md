@@ -14,9 +14,6 @@ MCGA (Multi-task Classical Chinese Literary Genre Audio Corpus) is the first lar
 
 > **Note:** The **Test split** is released first for fair benchmarking.
 > The full dataset will be available soon.
-
-
-
 ## Installation
 ```
 git clone https://github.com/yxduir/MCGA
@@ -27,7 +24,6 @@ uv venv --python 3.10
 source ./venv/bin/activate
 uv pip install -r requirements.txt
 ```
-
 ## Download Model、Data、Inference
 ```
 bash vllm_infer.sh \
@@ -40,7 +36,6 @@ bash vllm_infer.sh \
     "sk-openai-key-optional" \
     "https://api.openai.com/v1" 
 ```
-
 | Pos | Name | Description | Example |
 | :--- | :--- | :--- | :--- |
 | `$1` | `Model` | VLLM-supported model or Api:<br>• `Qwen/Qwen3-Omni-30B-A3B-Instruct`, `Qwen/Qwen2.5-Omni-7B`<br>• `mistralai/Voxtral-Small-24B-2507`, `mistralai/Voxtral-Mini-3B-2507`<br>• `microsoft/Phi-4-multimodal-instruct`<br>• `GPT-4o-mini-Audio`（for Api） | `"Qwen/Qwen2.5-Omni-7B"` |
@@ -51,7 +46,6 @@ bash vllm_infer.sh \
 | `$6` | `Workers` | Number of parallel API request threads | `8` |
 | `$7` | `API-Key` | Optional. Required only for `GPT-4o-mini-Audio` | `"sk-xxxx"` |
 | `$8` | `API-URL` | Optional. Required only for `GPT-4o-mini-Audio` | `"https://api.openai.com/v1"` |
-
 ## Eval Model
 ```
 export DEEPSEEK_API_KEY="deepseek-api-for-s2tt-sec-task-optional"
@@ -60,9 +54,6 @@ python eval_model.py \
     --model "Qwen/Qwen2.5-Omni-7B" \
     --mode "audio"
 ```
-
-
-
 ## 🖊Citation
 ```
 @misc{du2026mcgamultitaskclassicalchinese,
