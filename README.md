@@ -43,14 +43,14 @@ bash vllm_infer.sh \
 
 | Pos | Name | Description | Example |
 | :--- | :--- | :--- | :--- |
-| **`$1`** | **Model** | VLLM-supported model repo or Api:<br>• `Qwen/Qwen2.5-Omni-7B`, `Qwen/Qwen3-Omni-30B-A3B-Instruct`, `Qwen/Qwen2-Audio-7B-Instruct`<br>• `mistralai/Voxtral-Small-24B-2507`, `mistralai/Voxtral-Mini-3B-2507`<br>• `microsoft/Phi-4-multimodal-instruct`<br>• `GPT-4o-mini-Audio`（for Api） | `"Qwen/Qwen2.5-Omni-7B"` |
-| **`$2`** | **GPUs** | Target GPU ID(s) (e.g., `"0"` or `"0,1"`) | `"0"` |
-| **`$3`** | **Port** | Port for the vLLM server | `8901` |
-| **`$4`** | **Tasks** | Evaluation tasks (comma-separated) | `"asr,s2tt,sec,sqa,su,sr"` |
-| **`$5`** | **Mode** | Input modality: `audio` or `text` | `"audio"` |
-| **`$6`** | **Workers** | Number of parallel API request threads | `8` |
-| **`$7`** | **API-Key** | Optional. Required only for `GPT-4o-mini-Audio` | `"sk-xxxx"` |
-| **`$8`** | **API-URL** | Optional. Required only for `GPT-4o-mini-Audio` | `"https://api.openai.com/v1"` |
+| `$1` | `Model` | VLLM-supported model repo or Api:<br>• `Qwen/Qwen2.5-Omni-7B`, `Qwen/Qwen3-Omni-30B-A3B-Instruct`, `Qwen/Qwen2-Audio-7B-Instruct`<br>• `mistralai/Voxtral-Small-24B-2507`, `mistralai/Voxtral-Mini-3B-2507`<br>• `microsoft/Phi-4-multimodal-instruct`<br>• `GPT-4o-mini-Audio`（for Api） | `"Qwen/Qwen2.5-Omni-7B"` |
+| `$2` | `GPUs` | Target GPU ID(s) (e.g., `"0"` or `"0,1"`) | `"0"` |
+| `$3` | `Port` | Port for the vLLM server | `8901` |
+| `$4` | `Tasks` | Evaluation tasks (comma-separated) | `"asr,s2tt,sec,sqa,su,sr"` |
+| `$5` | `Mode` | Input modality: `audio` or `text` | `"audio"` |
+| `$6` | `Workers` | Number of parallel API request threads | `8` |
+| `$7` | `API-Key` | Optional. Required only for `GPT-4o-mini-Audio` | `"sk-xxxx"` |
+| `$8` | `API-URL` | Optional. Required only for `GPT-4o-mini-Audio` | `"https://api.openai.com/v1"` |
 
 ## Eval Model
 ```
@@ -61,17 +61,6 @@ python eval_model.py \
     --mode "audio"
 
 ```
-
-
-
-
-<!-- ## Eval
-
-```
-cd eval
-bash infer_model.sh
-``` -->
-
 
 
 

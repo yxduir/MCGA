@@ -8,7 +8,6 @@ import time
 import numpy as np
 import openai
 from collections import Counter
-from comet import download_model, load_from_checkpoint
 from whisper.normalizers import BasicTextNormalizer
 from multiprocessing import Pool
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -72,7 +71,7 @@ class EmotionEvaluator:
                         {"role": "system", "content": "你是一位严谨的语音情感分析助手，请严格按照评分规则进行判定。"},
                         {"role": "user", "content": prompt}
                     ],
-                    temperature=0.1,
+                    temperature=0.0,
                     timeout=60
                 )
                 return response.choices[0].message.content
@@ -117,7 +116,7 @@ def _process_sec_line(args):
     line_data, api_key = args
     evaluator = EmotionEvaluator(api_key=api_key)
     data = line_data
-    r_parts = data.get("sec", "").replace("\n\n","\n").split('\n', 2)
+    r_parts = data.get("sec_r", "").replace("\n\n","\n").split('\n', 2)
     
     # 获取三项评分的原始文本结果
     res1 = evaluator.evaluate_voice_persona(data.get("sec_1", ""), r_parts[0] if len(r_parts)>0 else "")
@@ -145,8 +144,10 @@ def _process_sec_line(args):
 
 def _process_beauty_item(args):
     item, metrics, api_key, src_key, trans_key = args
+
     client = openai.OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
     source, translation = item.get(src_key, ''), item.get(trans_key, '')
+    translation = translation.split("译文：")[-1].strip()
     scores = {}
     for metric in metrics:
         prompt = BEAUTY_PROMPTS[metric].format(source=source, translation=translation, score="")
@@ -162,7 +163,6 @@ def _process_beauty_item(args):
 class ModelEvaluator:
     def __init__(self, model_name, api_key=None):
         self.model_name = model_name
-        self.comet_model = None
         self.normalizer = ChineseCERNormalizer()
         self.api_key = api_key
 
@@ -311,33 +311,6 @@ class ModelEvaluator:
         print(pivot_cer.to_csv(sep='&', index=True, float_format="%.1f", na_rep="-"))
         print(f"Count (条数) (& 分隔):")
         print(pivot_count.fillna(0).astype(int).to_csv(sep='&', index=True))
-
-
-    def run_s2tt_comet_eval(self, folder, src_key, mt_key, ref_key, splits_to_include=None, use_gpu=False):
-            data = self.load_jsonl(folder)
-            if not data: return
-            df = pd.DataFrame(data)
-            if splits_to_include: df = df[df['split'].isin(splits_to_include)]
-            
-            print(f" -> Computing {folder} COMET (GPU: {use_gpu})...")
-            
-            # 延迟加载模型
-            if self.comet_model is None: 
-                self.comet_model = load_from_checkpoint(download_model("Unbabel/wmt22-comet-da"))
-            
-            # 准备数据
-            comet_input = df.rename(columns={src_key: 'src', mt_key: 'mt', ref_key: 'ref'})[['src', 'mt', 'ref']].to_dict('records')
-            
-            # 根据 use_gpu 变量决定使用 GPU 还是 CPU
-            # gpus=1 代表使用 1 个 GPU，gpus=0 代表使用 CPU
-            gpu_count = 1 if use_gpu else 0
-            
-            # 执行预测
-            model_output = self.comet_model.predict(comet_input, batch_size=32, gpus=gpu_count)
-            score = model_output.system_score
-            
-            print(f"Overall COMET: {score:.4f}")
-            return score
 
     def run_sqa_eval(self, folder, ref_key, hyp_key, splits_to_include=None):
         data = self.load_jsonl(folder)
@@ -530,33 +503,45 @@ class ModelEvaluator:
         
 
 # --- 执行入口 ---
+import argparse
+import os
+
+# ... 保持现有的 import 不变 ...
+
 if __name__ == "__main__":
-    MODELS_TO_TEST = ["gemini-3-flash-preview","qwen2_5_omni","midashenglm","gpt-4o-mini-audio-preview","qwen3_omni","voxtral_mini","phi4_multimodal","voxtral_small"]
-    MODELS_TO_TEST = ["qwen2_5_omni"]
-    mode = "audio"
-    # mode = "text"
+    parser = argparse.ArgumentParser(description="模型评测脚本")
+    
+    # 定义命令行参数
+    parser.add_argument("--model", nargs="+", default=["Qwen2.5-Omni-7B"], help="要测试的模型列表")
+    parser.add_argument("--mode", type=str, default="audio", choices=["audio", "text"], help="模式：audio 或 text")
+    parser.add_argument("--tasks", nargs="+", default=["asr", "s2tt", "sec", "sqa", "su", "sr"] ,help="执行的任务列表 (例如: asr s2tt sec sqa su sr)")
+    parser.add_argument("--force_run", action="store_true",default=False,help="是否强制重跑")
+
+    args = parser.parse_args()
+
+    # 将参数赋值给原有变量名
+    MODELS_TO_TEST = args.model.split("/")[-1]
+    mode = args.mode
+    force_run = args.force_run
 
     DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 
-    #s2tt,sec任务需要deepseek api key来进行评测
-    if len(DEEPSEEK_API_KEY) < 5:
-        TASKS = ["asr","sqa","su","sr"]
-        print("DEEPSEEK_API_KEY 未正确配置，请检查环境变量。")
+    if args.tasks:
+        TASKS = args.tasks
     else:
-        TASKS = ["asr","s2tt","sec","sqa","su","sr"]
+        if not DEEPSEEK_API_KEY or DEEPSEEK_API_KEY.strip() == "deepseek-api-for-s2tt-sec-tasks-optional":
+            TASKS = ["asr", "sqa", "su", "sr"]
+            print("DEEPSEEK_API_KEY 未正确配置，跳过 s2tt 和 sec 任务评估。")
+        else:
+            TASKS = ["asr", "s2tt", "sec", "sqa", "su", "sr"]
 
-    force_run=True
+    my_model = f"{MODELS_TO_TEST}_{mode}"
 
-    for my_model in MODELS_TO_TEST:
+    evaluator = ModelEvaluator(MODELS_TO_TEST, api_key=DEEPSEEK_API_KEY)
 
-        my_model = f"{my_model}_{mode}"
-
-        evaluator = ModelEvaluator(my_model, api_key=DEEPSEEK_API_KEY)
-
-        if "asr" in TASKS: evaluator.run_asr_eval('asr', 'asr', 'asr_r', ["train", "val", "test"], do_genre_analysis=True, do_dynasty_analysis=False)
-        if "s2tt_comet" in TASKS: evaluator.run_s2tt_comet_eval('s2tt', 'asr', 's2tt_r_t', 's2tt', ["test"], use_gpu=True)
-        if "s2tt" in TASKS:evaluator.run_s2tt_beauty_eval(folder='s2tt', src_key='asr', trans_key='s2tt_r_t', num_workers=256, force_run=force_run)
-        if "sec" in TASKS: evaluator.run_sec_eval('sec', num_processes=256, force_run=force_run)
-        if "sqa" in TASKS: evaluator.run_sqa_eval('sqa', 'sqa_a', 'sqa_a_r', ["test"])
-        if "su" in TASKS: evaluator.run_acc_eval('su', 'su_a', 'su_r', ["test"])
-        if "sr" in TASKS: evaluator.run_acc_eval('sr', 'sr_a', 'sr_r', ["test"])
+    if "asr" in TASKS: evaluator.run_asr_eval('asr', 'asr', 'asr_r', ["train", "val", "test"], do_genre_analysis=True, do_dynasty_analysis=False)
+    if "s2tt" in TASKS:evaluator.run_s2tt_beauty_eval(folder='s2tt', src_key='asr', trans_key='s2tt_r', num_workers=64, force_run=force_run)
+    if "sec" in TASKS: evaluator.run_sec_eval('sec', num_processes=64, force_run=force_run)
+    if "sqa" in TASKS: evaluator.run_sqa_eval('sqa', 'sqa_a', 'sqa_a_r', ["test"])
+    if "su" in TASKS: evaluator.run_acc_eval('su', 'su_a', 'su_r', ["test"])
+    if "sr" in TASKS: evaluator.run_acc_eval('sr', 'sr_a', 'sr_r', ["test"])
