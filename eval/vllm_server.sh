@@ -58,14 +58,16 @@ for model_info in "${MODELS[@]}"; do
             --tensor-parallel-size $tp_size --served-model-name "$name" > "${name}.log" 2>&1 &
 
     elif [[ "$name" == *"Phi-4"* ]]; then
-        CUDA_VISIBLE_DEVICES=$gpus vllm serve "$path" --port $port --host 0.0.0.0 --dtype auto --trust-remote-code \
+        CUDA_VISIBLE_DEVICES=$gpus vllm serve "$path" --port $port --host 0.0.0.0 --dtype bfloat16 --trust-remote-code \
             --max-model-len 131072 --limit-mm-per-prompt '{"audio":3,"image":3}' \
+            --enable-lora --max-loras 2 --max-lora-rank 320 \
+            --lora-modules speech=../models/Phi-4-multimodal-instruct/speech-lora vision=../models/Phi-4-multimodal-instruct/vision-lora \
             --tensor-parallel-size $tp_size --served-model-name "$name" > "${name}.log" 2>&1 &
 
     elif [[ "$name" == *"midasheng"* ]]; then
         CUDA_VISIBLE_DEVICES=$gpus python3 -m vllm.entrypoints.openai.api_server --model "$path" \
             --port $port --host 0.0.0.0 --dtype bfloat16 --max_model_len 4096 --trust_remote_code \
-            --tensor-parallel-size $tp_size --served-model-name "$name" > "${name}.log" 2>&1 &
+            --tensor-parallel-size $tp_size --served-model-name "$name" --enable-chunked-prefill false \ > "${name}.log" 2>&1 &
 
     else
         # 默认启动逻辑 (Qwen2.5-Omni-7B 会走这里)

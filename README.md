@@ -30,7 +30,7 @@ uv pip install -r requirements.txt
 ```
 bash vllm_infer.sh \
     "Qwen/Qwen2.5-Omni-7B" \
-    "0" \
+    "0,1" \
     8901 \
     "asr,s2tt,sec,sqa,su,sr" \
     "audio" \
