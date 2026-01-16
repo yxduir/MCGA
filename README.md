@@ -26,36 +26,40 @@ uv venv --python 3.10
 source ./venv/bin/activate
 uv pip install -r requirements.txt
 ```
-## Download Model、Data、Inference
+## Download Model、Data、Inference、Eval
 ```
+# Optional: DeepSeek API key only for S2TT and SEC task evaluation, 
+export DEEPSEEK_API_KEY="your-deepseek-api-for-s2tt-sec-task-optional"
+
 bash vllm_infer.sh \
     "Qwen/Qwen2.5-Omni-7B" \
-    "0,1" \
+    "0" \
     8901 \
     "asr,s2tt,sec,sqa,su,sr" \
     "audio" \
-    8 \
+    "test" \
+    16 \
+    "localhost" \
     "sk-openai-key-optional" \
-    "https://api.openai.com/v1" 
+    "https://api.openai.com/v1" \
+    "true" \
+    "true"
 ```
-| Pos | Name | Description | Example |
+| Pos | Name | Description | Default |
 | :--- | :--- | :--- | :--- |
 | `$1` | `Model` | VLLM-supported model or Api:<br>• `Qwen/Qwen3-Omni-30B-A3B-Instruct`, `Qwen/Qwen2.5-Omni-7B`<br>• `mistralai/Voxtral-Small-24B-2507`, `mistralai/Voxtral-Mini-3B-2507`<br>• `microsoft/Phi-4-multimodal-instruct`<br>• `GPT-4o-mini-Audio`（for Api） | `"Qwen/Qwen2.5-Omni-7B"` |
-| `$2` | `GPUs` | Target GPU ID(s) (e.g., `"0"` or `"0,1"`) | `"0"` |
-| `$3` | `Port` | Port for the vLLM server | `8901` |
-| `$4` | `Tasks` | Evaluation tasks (comma-separated) | `"asr,s2tt,sec,sqa,su,sr"` |
+| `$2` | `GPUs` | GPU ID. Use commas for multiple GPUs. (e.g. `0,1`) | `"0"` |
+| `$3` | `Port` | Port for the vLLM server (local or remote) | `8901` |
+| `$4` | `Tasks` | Evaluation tasks | `"asr,s2tt,sec,sqa,su,sr"` |
 | `$5` | `Mode` | Input modality: `audio` or `text` | `"audio"` |
-| `$6` | `Workers` | Number of parallel API request threads | `8` |
-| `$7` | `API-Key` | Optional. Required only for `GPT-4o-mini-Audio` | `"sk-xxxx"` |
-| `$8` | `API-URL` | Optional. Required only for `GPT-4o-mini-Audio` | `"https://api.openai.com/v1"` |
-## Eval Model
-```
-export DEEPSEEK_API_KEY="deepseek-api-for-s2tt-sec-task-optional"
-cd eval
-python eval_model.py \
-    --model "Qwen/Qwen2.5-Omni-7B" \
-    --mode "audio"
-```
+| `$6` | `Split` | Dataset split (currently supports `test` only). | `"test"` |
+| `$7` | `Workers` | Number of parallel API request threads | `16` |
+| `$8` | `Ip` | `localhost` or remote VLLM server IP (e.g. `192.168.138.182`) | `localhost` |
+| `$9` | `API-Key` | Optional. Required only for `GPT-4o-mini-Audio` | `"sk-xxxx"` |
+| `$10` | `API-URL` | Optional. Required only for `GPT-4o-mini-Audio` | `"https://api.openai.com/v1"` |
+| `$11` | `Kill-Server` | Whether to terminate `localhost` vLLM server after inference. | `"true"` |
+| `$12` | `Eval` | Whether to trigger execute after inference. | `"true"` |
+
 ## 🖊Citation
 ```
 @misc{du2026mcgamultitaskclassicalchinese,

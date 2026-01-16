@@ -32,6 +32,8 @@ class SafeDict(dict):
     def __missing__(self, key): return f"{{{key}}}"
 
 def encode_audio(path, max_ms=30000):
+    if args.model == "Step-Audio-2-mini":
+        max_ms = 29900 # Step-Audio-2-mini 对于长度为 30s 的音频会超出范围，因此限制为 29.9s
     audio = AudioSegment.from_file(path)
     if len(audio) > max_ms: audio = audio[:max_ms]
     byte_io = io.BytesIO()
@@ -115,7 +117,7 @@ def run_task(task_name, args):
     prompts = load_prompts().get(task_name)
     if not prompts: return
 
-    input_path = f"../data/MCGA_{task_name}_test.jsonl"
+    input_path = f"../data/MCGA_{task_name}_{args.split}.jsonl"
     output_key = f"{task_name}_a_r" if task_name == "sqa" else f"{task_name}_r"
     output_path = f"../eval/{task_name}/{args.model}_{args.input_mode}.jsonl"
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
@@ -130,11 +132,13 @@ def run_task(task_name, args):
     else:
         # Local 模式
         target_port = args.port if args.port is not None else config.get("port")
+        target_ip = args.ip if args.ip is not None else config.get("ip")
+        
         # 如果命令行手动传了 base_url，则优先使用
         if args.base_url and args.base_url != "https://api.openai.com/v1":
             final_base_url = args.base_url
         else:
-            final_base_url = f"http://{config['ip']}:{target_port}/v1"
+            final_base_url = f"http://{target_ip}:{target_port}/v1"
 
     opt = {
         "mode": mode,
@@ -156,10 +160,10 @@ def run_task(task_name, args):
     with open(input_path, 'r', encoding='utf-8') as f:
         for line in f:
             item = json.loads(line)
-            if item.get("split") == "test" or item.get("split") == "all":
+            if item.get("split") == "test" or args.split == "all":
                 tasks.append((item, os.path.dirname(os.path.abspath(input_path)), prompts["system"], prompts["instruction"], "audio", output_key, opt))
 
-    print(f"[*] Task: {task_name} | Model: {args.model} | URL: {opt['base_url']} | Mode: {args.input_mode} | Total: {len(tasks)}")
+    print(f"[*] Task: {task_name} | Model: {args.model} | URL: {opt['base_url']} | Mode: {args.input_mode} | Split: {args.split}| Total: {len(tasks)}")
     
     with open(output_path, 'w', encoding='utf-8') as f_out:
         with Pool(processes=args.workers) as pool:
@@ -176,8 +180,10 @@ if __name__ == "__main__":
     parser.add_argument("--input_mode", type=str, choices=["audio", "text"], default="audio")
     parser.add_argument("--workers", type=int, default=16)
     parser.add_argument("--api_key", type=str, default="sk-your-key")
+    parser.add_argument("--ip", type=str, default="localhost", help="Manual override for the IP defined in REGISTRY")
     parser.add_argument("--port", type=int, default=None, help="Manual override for the port defined in REGISTRY")
     parser.add_argument("--base_url", type=str, default="https://api.openai.com/v1", help="Manual override for the API base URL")
+    parser.add_argument("--split", type=str, default="test")
     
     args = parser.parse_args()
 

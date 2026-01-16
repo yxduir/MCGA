@@ -67,7 +67,7 @@ for model_info in "${MODELS[@]}"; do
     elif [[ "$name" == *"midasheng"* ]]; then
         CUDA_VISIBLE_DEVICES=$gpus python3 -m vllm.entrypoints.openai.api_server --model "$path" \
             --port $port --host 0.0.0.0 --dtype bfloat16 --max_model_len 4096 --trust_remote_code \
-            --tensor-parallel-size $tp_size --served-model-name "$name" --enable-chunked-prefill false \ > "${name}.log" 2>&1 &
+            --tensor-parallel-size $tp_size --served-model-name "$name" --enable-chunked-prefill false  > "${name}.log" 2>&1 &
 
     else
         # 默认启动逻辑 (Qwen2.5-Omni-7B 会走这里)
