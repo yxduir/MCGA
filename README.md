@@ -7,9 +7,9 @@ MCGA (Multi-task Classical Chinese Literary Genre Audio Corpus) is the first lar
 </div>
 
 - **Language**: Chinese
-- **Data Size**: 22,000 sample, 119hour
+- **Data Size**: 22,000 audio samples, 119hour
 - **Data Split**: Train / Val / Test
-- **Data Source**: Native speakers (13 males and 15 females)
+- **Audio Source**: Native speakers (13 males and 15 females)
 - **Domain**: Classical Chinese Literary Study
 - **Literary Genre**: Fu (Rhapsody), Shi (Poetry), Wen (Prose), Ci (Lyric), and Qu (Song)
 - **Task**: ASR, S2TT, SEC, SQA, SU, SR
