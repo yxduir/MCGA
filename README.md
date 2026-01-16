@@ -1,4 +1,8 @@
 # MCGA: A Multi-task Classical Chinese Literary Genre Audio Corpus
+<div align="center">
+  <img src="./photo/example.png" width="100%" alt="描述文字">
+</div>
+
 MCGA (Multi-task Classical Chinese Literary Genre Audio Corpus) is the first large-scale, open-source, and fully copyrighted audio corpus dedicated to Classical Chinese Studies, comprising 119 hours (22,000 samples) of standard Mandarin recordings by native speakers that span five major literary genres (Fu, Shi, Wen, Ci, and Qu) across 11 historical periods, specifically constructed to support six core speech-centric tasksAutomatic Speech Recognition (ASR), Speech-to-Text Translation (S2TT), Speech Emotion Captioning(SEC), Spoken Question Answering(SQA), Speech Understanding(SU), Speech Reasoning(SR) to bridge the gap in domain-specific audio resources and advance the multidimensional capabilities of Multimodal Large Language Models.
 - **Language**: Chinese
 - **Data Size**: 22,000 sample, 119hour
