@@ -21,6 +21,9 @@ MCGA (Multi-task Classical Chinese Literary Genre Audio Corpus) is the first lar
 ## Download
 
 ```bash
+git clone https://github.com/yxduir/MCGA
+cd MCGA
+
 # Install huggingface-hub (provides `hf` CLI)
 pip install -U huggingface-hub
 
@@ -30,9 +33,6 @@ bash down_data.sh
 
 ## Installation
 ```
-git clone https://github.com/yxduir/MCGA
-cd MCGA
-
 # Install uv (if not already installed)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
