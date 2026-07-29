@@ -1,3 +1,83 @@
+---
+dataset_info:
+  features:
+  - name: id
+    dtype: string
+  - name: author
+    dtype: string
+  - name: title
+    dtype: string
+  - name: dynasty
+    dtype: string
+  - name: genre
+    dtype: string
+  - name: gender
+    dtype: string
+  - name: audio
+    dtype:
+      audio:
+        decode: false
+  - name: asr
+    dtype: string
+  - name: s2tt
+    dtype: string
+  - name: sec_1
+    dtype: string
+  - name: sec_2
+    dtype: string
+  - name: sec_3
+    dtype: string
+  - name: sqa
+    dtype: string
+  - name: sqa_a
+    dtype: string
+  - name: su
+    dtype: string
+  - name: su_a
+    dtype: string
+  - name: sr
+    dtype: string
+  - name: sr_a
+    dtype: string
+  - name: time
+    dtype: float64
+  - name: asr_split
+    dtype: string
+  - name: s2tt_split
+    dtype: string
+  - name: sec_split
+    dtype: string
+  - name: sqa_split
+    dtype: string
+  - name: su_split
+    dtype: string
+  - name: sr_split
+    dtype: string
+  splits:
+  - name: train
+    num_examples: 18571
+  - name: val
+    num_examples: 1489
+  - name: test
+    num_examples: 1948
+  download_size: 1138130667
+configs:
+- config_name: default
+  data_files:
+  - split: train
+    path: data/train-*
+  - split: val
+    path: data/val-*
+  - split: test
+    path: data/test-*
+language:
+- zho
+task_categories:
+- automatic-speech-recognition
+- audio-text-to-text
+library_name: datasets
+license: cc-by-nc-sa-4.0
+---
 # MCGA: A Multi-task Classical Chinese Literary Genre Audio Corpus
 <div align="right">
   <img src="./example.png" width="100%" alt="描述文字">
