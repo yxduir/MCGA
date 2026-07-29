@@ -7,7 +7,9 @@ data/ccfqa_test
 *.wav
 *.tar.gz
 *.jsonl
+*.png
 upload
+photo
 eval/logs/*.log
 upload
 upload_test
