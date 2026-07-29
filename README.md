@@ -1,83 +1,3 @@
----
-dataset_info:
-  features:
-  - name: id
-    dtype: string
-  - name: author
-    dtype: string
-  - name: title
-    dtype: string
-  - name: dynasty
-    dtype: string
-  - name: genre
-    dtype: string
-  - name: gender
-    dtype: string
-  - name: audio
-    dtype:
-      audio:
-        decode: false
-  - name: asr
-    dtype: string
-  - name: s2tt
-    dtype: string
-  - name: sec_1
-    dtype: string
-  - name: sec_2
-    dtype: string
-  - name: sec_3
-    dtype: string
-  - name: sqa
-    dtype: string
-  - name: sqa_a
-    dtype: string
-  - name: su
-    dtype: string
-  - name: su_a
-    dtype: string
-  - name: sr
-    dtype: string
-  - name: sr_a
-    dtype: string
-  - name: time
-    dtype: float64
-  - name: asr_split
-    dtype: string
-  - name: s2tt_split
-    dtype: string
-  - name: sec_split
-    dtype: string
-  - name: sqa_split
-    dtype: string
-  - name: su_split
-    dtype: string
-  - name: sr_split
-    dtype: string
-  splits:
-  - name: train
-    num_examples: 18571
-  - name: val
-    num_examples: 1489
-  - name: test
-    num_examples: 1948
-  download_size: 1138130667
-configs:
-- config_name: default
-  data_files:
-  - split: train
-    path: data/train-*
-  - split: val
-    path: data/val-*
-  - split: test
-    path: data/test-*
-language:
-- zho
-task_categories:
-- automatic-speech-recognition
-- audio-text-to-text
-library_name: datasets
-license: cc-by-nc-sa-4.0
----
 # MCGA: A Multi-task Classical Chinese Literary Genre Audio Corpus
 <div align="right">
   <img src="./example.png" width="100%" alt="描述文字">
@@ -155,14 +75,11 @@ bash vllm_infer.sh \
 | `$12` | `Eval` | Whether to trigger execute after inference. | `"true"` |
 ## 🖊Citation
 ```
-@misc{du2026mcgamultitaskclassicalchinese,
-      title={{MCGA}: A Multi-task Classical Chinese Literary Genre Audio Corpus}, 
-      author={Yexing Du and Kaiyuan Liu and Bihe Zhang and Youcheng Pan and Bo Yang and Liangyu Huo and Xiyuan Zhang and Jian Xie and Daojing He and Yang Xiang and Ming Liu and Bin Qin},
-      year={2026},
-      eprint={2601.09270},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2601.09270}, 
+@inproceedings{du2026mcga,
+  title={Mcga: A multi-task classical chinese literary genre audio corpus},
+  author={Du, Yexing and Liu, Kaiyuan and Zhang, Bihe and Pan, Youcheng and Yang, Bo and Huo, Liangyu and Zhang, Xiyuan and Xie, Jian and He, Daojing and Xiang, Yang and others},
+  booktitle={Findings of the Association for Computational Linguistics: ACL 2026},
+  pages={30857--30866},
+  year={2026}
 }
 ```
-
