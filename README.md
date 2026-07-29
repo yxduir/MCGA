@@ -1,6 +1,81 @@
+---
+dataset_info:
+  features:
+  - name: id
+    dtype: string
+  - name: author
+    dtype: string
+  - name: title
+    dtype: string
+  - name: dynasty
+    dtype: string
+  - name: genre
+    dtype: string
+  - name: gender
+    dtype: string
+  - name: audio
+    dtype:
+      audio:
+        decode: false
+  - name: asr
+    dtype: string
+  - name: s2tt
+    dtype: string
+  - name: sec_1
+    dtype: string
+  - name: sec_2
+    dtype: string
+  - name: sec_3
+    dtype: string
+  - name: sqa
+    dtype: string
+  - name: sqa_a
+    dtype: string
+  - name: su
+    dtype: string
+  - name: su_a
+    dtype: string
+  - name: sr
+    dtype: string
+  - name: sr_a
+    dtype: string
+  - name: time
+    dtype: float64
+  - name: asr_split
+    dtype: string
+  - name: s2tt_split
+    dtype: string
+  - name: sec_split
+    dtype: string
+  - name: sqa_split
+    dtype: string
+  - name: su_split
+    dtype: string
+  - name: sr_split
+    dtype: string
+  splits:
+  - name: test
+    num_bytes: 1272025700.996
+    num_examples: 1948
+  download_size: 1138130667
+  dataset_size: 1272025700.996
+configs:
+- config_name: default
+  data_files:
+  - split: test
+    path: data/test-*
+language:
+- zho
+task_categories:
+- automatic-speech-recognition
+- audio-text-to-text
+library_name: datasets
+license: cc-by-nc-sa-4.0
+---
+
 # MCGA: A Multi-task Classical Chinese Literary Genre Audio Corpus
 <div align="right">
-  <img src="./photo/example.png" width="100%" alt="描述文字">
+  <img src="./example.png" width="100%" alt="描述文字">
 </div>
 <div style="text-align: justify;">
 MCGA (Multi-task Classical Chinese Literary Genre Audio Corpus) is the first large-scale, open-source, and fully copyrighted audio corpus dedicated to Classical Chinese Studies, comprising 119 hours (22,000 samples) of standard Mandarin recordings by native speakers that span five major literary genres (Fu, Shi, Wen, Ci, and Qu) across 11 historical periods, specifically constructed to support six core speech-centric tasksAutomatic Speech Recognition (ASR), Speech-to-Text Translation (S2TT), Speech Emotion Captioning(SEC), Spoken Question Answering(SQA), Speech Understanding(SU), Speech Reasoning(SR) to bridge the gap in domain-specific audio resources and advance the multidimensional capabilities of Multimodal Large Language Models.
@@ -18,8 +93,16 @@ MCGA (Multi-task Classical Chinese Literary Genre Audio Corpus) is the first lar
 - **License**: CC BY-NC-SA-4.0
 
 
-> **Note:** The **Test split** is released first for fair benchmarking.
-> The full dataset will be available soon.
+## Download
+
+```bash
+# Install huggingface-hub (provides `hf` CLI)
+pip install -U huggingface-hub
+
+# Download & extract MCGA_train.tar.gz, MCGA_val.tar.gz, MCGA_test.tar.gz (119h, 22,000 samples)
+bash down_data.sh
+```
+
 ## Installation
 ```
 git clone https://github.com/yxduir/MCGA
@@ -65,7 +148,6 @@ bash vllm_infer.sh \
 | `$10` | `API-URL` | Optional. Required only for `GPT-4o-mini-Audio` | `"https://api.openai.com/v1"` |
 | `$11` | `Kill-Server` | Whether to terminate `localhost` vLLM server after inference. | `"true"` |
 | `$12` | `Eval` | Whether to trigger execute after inference. | `"true"` |
-
 ## 🖊Citation
 ```
 @misc{du2026mcgamultitaskclassicalchinese,
@@ -78,3 +160,4 @@ bash vllm_infer.sh \
       url={https://arxiv.org/abs/2601.09270}, 
 }
 ```
+
